@@ -54,13 +54,15 @@ import javax.transaction.SystemException;
 public interface StatelessLocal {
 
 	public String showAllEvents();
-	public String showEventById(@WebParam(name = "idevent") int idevent);
-	public String showBookedSeats(@WebParam(name = "idevent") int idevent);
-	public String showEventByName(@WebParam(name = "artistName") String artistName);
-	public String showBookingBySeat(@WebParam(name = "seat") String seat);
-	public String showBookedEvent(@WebParam(name = "userName") String userName);
-	public String showPricesByEvent(@WebParam(name = "idevent") int idevent);
-	public String addBooking(@WebParam(name = "idevent") int idevent,@WebParam(name = "seat") String seat,@WebParam(name = "username") String username ,@WebParam(name = "cardnumber") String cardNumber,@WebParam(name = "cardholdername") String cardHolderName) throws NotSupportedException, SystemException, SecurityException, IllegalStateException, RollbackException, HeuristicMixedException, HeuristicRollbackException, Exception;
+	public String showEventById(int idevent);
+	public String showBookedSeats(int idevent);
+	public String showEventByName(String artistName);
+	public String showBookingBySeat(String seat);
+	public String showBookedEvent(String userName);
+	public String showPricesByEvent(int idevent);
+	public String showBookedSeatsByEventInSection(int idevent, String section);
+	public float getPriceForSeat(int idevent, String section);
+	public boolean addBooking(int idevent, String seat, String username , String cardNumber, String cardHolderName);
 	public boolean checkReservation(int idevent, String seat) throws Exception;
 	public boolean checkAvailability(int idevent) throws Exception;
 	public boolean checkAvailabilityBySection(int idevent, String section) throws Exception;
