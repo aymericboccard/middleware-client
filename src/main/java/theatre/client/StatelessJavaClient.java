@@ -40,13 +40,10 @@
 
 package theatre.client;
 
-import java.math.BigDecimal;
+
 import java.util.HashMap;
 import java.util.Scanner;
-
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
 import theatre.service.StatelessLocal;
 
 public class StatelessJavaClient {
@@ -55,7 +52,7 @@ public class StatelessJavaClient {
 
     public static void main(String args[]) {
     	System.out.println("Bonjour! Bienvenue au theatre!\n Que voulez-vous faire?\n 1. Regarder les événements \n"
-    			+ " 2. Faire une reservation \n 3. Regarder mes reservations \n 4. Partir");
+    			+ " 2. Faire une reservation \n 3. Regarder mes reservations \n 4. Partir\n\n");
     	String valeur = sc.nextLine();
     	
     	boolean partir = false;
@@ -65,14 +62,15 @@ public class StatelessJavaClient {
     	while (!partir){
     		if(unvalid ^ (!valeur.equals("1") && !valeur.equals("2") && !valeur.equals("3") && !valeur.equals("4"))){
     			System.out.println("Que voulez-vous faire?\n 1. Regarder les événements \n"
-	        			+ " 2. Faire une reservation \n 3. Regarder mes reservations \n 4. Partir");
+	        			+ " 2. Faire une reservation \n 3. Regarder mes reservations \n 4. Partir\n\n");
+	        	valeur = sc.nextLine();
 	        	valeur = sc.nextLine();
 	        	unvalid = (!valeur.equals("1") && !valeur.equals("2") && !valeur.equals("3") && !valeur.equals("4"));
     		}
     		
 	    	while (unvalid){
 	    		System.out.println("Désolé, action non valide \n Que voulez-vous faire?\n 1. Regarder les événements \n"
-	        			+ " 2. Faire une reservation \n 3. Regarder mes reservations \n 4. Partir");
+	        			+ " 2. Faire une reservation \n 3. Regarder mes reservations \n 4. Partir\n\n");
 	        	valeur = sc.nextLine();
 	        	unvalid = !(valeur.equals("1") || valeur.equals("2") || valeur.equals("3") || valeur.equals("4"));
 	    	}
@@ -123,12 +121,12 @@ public class StatelessJavaClient {
 			StatelessLocal sless = 
             (StatelessLocal) ic.lookup("theatre.service.StatelessLocal");
 			System.out.println(sless.showAllEvents());
-	        System.out.println("Écrivez le numéro de l'événement auquel vous souhaitez participer:");
+	        System.out.println("\n\nÉcrivez le numéro de l'événement auquel vous souhaitez participer:");
 	    	int even = sc.nextInt();
 	    	
 	    	while(!sless.checkAvailability(even)){
-	    		System.out.println("Evenement "+even+" complet !");
-	    		System.out.println("Choisissez un autre événement en saisissant son numéro ou revenez en arrière en saisissant -1");
+	    		System.out.println("\n\nEvenement "+even+" complet !");
+	    		System.out.println("Choisissez un autre événement en saisissant son numéro ou revenez en arrière en saisissant -1\n\n");
 	    		even = sc.nextInt();
 		    	if(even == -1){
 		    		return false;
@@ -136,8 +134,9 @@ public class StatelessJavaClient {
 	    	}
 	    	
 	    	System.out.println(sless.showPricesByEvent(even));
-	        System.out.println("Dans quelle section vous voulez être? (A, B, C ou D) :");
+	        System.out.println("Dans quelle section vous voulez être? (A, B, C ou D) :\n");
 	    	String sector = sc.nextLine();
+	    	sector = sc.nextLine();//doit etre doublé pour bien fonctionner
 	    	
 	    	while(!(sector.equals("A") || sector.equals("B") || sector.equals("C") || sector.equals("D"))){
 	    		System.out.println("Saisissez A, B, C ou D ou revenez au menu précédent en saisissant Q");
@@ -151,7 +150,7 @@ public class StatelessJavaClient {
 	    	}
 	    	
 	    	float price;
-	    	HashMap<String, String> rangeseat = null;
+	    	HashMap<String, String> rangeseat = new HashMap<String,String>();
 	    	rangeseat.put("A", "1-25");
 	    	rangeseat.put("B", "1-45");
 	    	rangeseat.put("C", "1-100");
@@ -173,20 +172,24 @@ public class StatelessJavaClient {
     		 System.out.println("Le prix du siège "+sector+""+numseat+" vous sera facturé "+price+" €");
     		 System.out.println("Veuillez renseigner votre prénom suivi de votre nom :");
     		 String username = sc.nextLine();
+    		 username = sc.nextLine();
+
     		 System.out.println("Veuillez renseigner votre numéro de carte bleue :");
     		 String numcard = sc.nextLine();
+    		 
     		 System.out.println("Veuillez renseigner le nom du propriétaire de la carte :");
     		 String holdername = sc.nextLine();
     		 
-    		 if(sless.addBooking(even, sector+""+numseat, username, numcard, username)){
+    		 if(sless.addBooking(even, sector+""+numseat, username, numcard, holdername)){
 				 System.out.println("Votre réservation a été effectué.");
 				 System.out.println("Souhaitez-vous partir ? (o/n)");
 		    	 String valeur = sc.nextLine();
+		    	 
 		    	 while (!valeur.equals("o") && !valeur.equals("n")){
 		    	 	 System.out.println("Désolé, réponse non valide");
 		         	 valeur = sc.nextLine();
 		    	 }
-		    	 return valeur.equals("n");
+		    	 return valeur.equals("o");
 		    	 
     		 }else{
     			 System.out.println("Une erreur est survenue lors du paiement. La réservation n'a pas été prise en compte.");
@@ -196,8 +199,6 @@ public class StatelessJavaClient {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-    	
     	return true;
     }
     
